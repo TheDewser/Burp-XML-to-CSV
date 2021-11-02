@@ -1,34 +1,35 @@
-#Burp Parser XML to CSV
-#Simple, Easy to Use 
+#print filePath#Burp Parser XML to CSV
+#Simple, Easy to Use
+#Attempt to update to Python3
 
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import csv
 import os
-import random
+#import random
 import base64
 
 
-while(True):
+while True :
     # ctrl-c to quit
 
-	print "Welcome to Burp XML Simple Parse. \n 1 -------- Current Directory \n 2 -------- Enter Path to XML File "
-	Uinput = raw_input("Enter choose: ")
+	print ("Welcome to Burp XML Simple Parse. \n 1 -------- Current Directory \n 2 -------- Enter Path to XML File ")
+	Uinput = input("Enter choose: ")
 
 	if Uinput == "2":
-		filePath = raw_input('Enter Burp XML File Location: ')
+		filePath = input('Enter Burp XML File Location: ')
 		soup = BeautifulSoup(open(filePath,'r'))
 	elif Uinput == "1":
-		fileName = raw_input("Enter the BURRP XML filename (sample.xml): ")
+		fileName = input("Enter the BURRP XML filename (sample.xml): ")
 		dir_path = os.path.dirname(os.path.realpath(__file__)) + "\\"
 		filePath = dir_path + fileName
 		soup = BeautifulSoup(open(filePath,'r'))
 
 	else:
-		print "ERROR - Please choose from the menu options"
+		print ("ERROR - Please choose from the menu options")
 		break
 
-	issues = soup.findAll('issue')
+	issues = soup.find_all(string='issue')
 
 	
 	issueOutput =[]
@@ -62,6 +63,23 @@ while(True):
 
 	outfile = open("burpOutput.csv","wb")
 	writer = csv.writer(outfile)
+	# having an issue with the line below throwing a typeError
+	writer.writerow(["Name","Host","IP","Path","Severity","Confidence","Issue Background","Remediation Background","Vulnerability Classification","Issue Details","Request","Response"])
+	writer.writerows(issueOutput)
+
+	
+	end = input("File Complete! Want to end session? (Y/N)" )
+
+	if end == "Y":
+		break
+
+
+	#rando = random.randint(2000,3000)
+	#filenameout = "BurpOutput %s" % rando
+
+
+	outfile = open("burpOutput.csv","wb")
+	writer = csv.writer(outfile)
 	writer.writerow(["Name","Host","IP","Path","Severity","Confidence","Issue Background","Remediation Background","Vulnerability Classification", "Issue Details", "Request", "Response"])
 	writer.writerows(issueOutput)
 
@@ -70,6 +88,3 @@ while(True):
 
 	if end == "Y":
 		break
-
-
-
